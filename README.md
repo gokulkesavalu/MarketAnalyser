@@ -1,5 +1,8 @@
 # Market Analyser 📈
 
+[![CI](https://github.com/your-username/MarketAnalyser/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/MarketAnalyser/actions/workflows/ci.yml)
+[![Release](https://github.com/your-username/MarketAnalyser/actions/workflows/release.yml/badge.svg)](https://github.com/your-username/MarketAnalyser/actions/workflows/release.yml)
+
 Market Analyser is a modern Android application built to demonstrate **Clean Architecture**, **MVVM**, and the latest **Jetpack Compose** practices. It fetches real-time currency exchange rates using the [Alpha Vantage API](https://www.alphavantage.co/).
 
 ---
@@ -15,6 +18,7 @@ Market Analyser is a modern Android application built to demonstrate **Clean Arc
 - **Compose Stability** — `@Immutable` on UI state models to prevent unnecessary recompositions
 - **StrictMode** — Enabled in debug builds to catch UI-thread violations early
 - **R8 Minification** — Enabled for release builds with resource shrinking and ProGuard rules
+- **CI/CD** — GitHub Actions pipeline for automated testing and release publishing
 
 ---
 
@@ -113,6 +117,49 @@ R8 minification and resource shrinking are enabled for release:
 - `isMinifyEnabled = true`
 - `isShrinkResources = true`
 - ProGuard rules in `app/proguard-rules.pro` preserve Retrofit interfaces, Gson DTOs, OkHttp internals, and Hilt ViewModels.
+
+---
+
+## 🔄 CI / CD
+
+Two GitHub Actions workflows are included under `.github/workflows/`.
+
+### `ci.yml` — Continuous Integration
+
+Triggered on every **push to `main`** and every **pull request targeting `main`**.
+
+| Step | Action |
+|---|---|
+| Checkout | `actions/checkout@v4` |
+| JDK 17 setup | `actions/setup-java@v4` (Temurin) |
+| Unit tests | `./gradlew test` |
+| Upload results | Test HTML reports retained for 7 days |
+
+### `release.yml` — Release Pipeline
+
+Triggered by a **`v*` tag push** (e.g. `v1.2.0`) or manually via **workflow dispatch**.
+
+```
+git push tag v1.0.0
+        │
+        ▼
+┌──────────────┐     ┌───────────────────────┐     ┌──────────────────────┐
+│  Stage 1     │────▶│  Stage 2              │────▶│  Stage 3             │
+│  Unit Tests  │     │  Build signed AAB     │     │  GitHub Release      │
+│  (must pass) │     │  bundleRelease + R8   │     │  Auto release notes  │
+└──────────────┘     │  Upload artifact      │     │  Attaches .aab       │
+                     └───────────────────────┘     └──────────────────────┘
+```
+
+
+#### Cutting a release
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+The pipeline runs tests → builds a signed AAB → publishes a GitHub Release with auto-generated release notes and the AAB attached.
 
 ---
 

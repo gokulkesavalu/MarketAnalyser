@@ -18,14 +18,30 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "ALPHA_VANTAGE_API_KEY", "\"YOUR_API_KEY_HERE\"")
+        buildConfigField(
+            "String", "ALPHA_VANTAGE_API_KEY",
+            "\"${System.getenv("ALPHA_VANTAGE_API_KEY") ?: "YOUR_API_KEY_HERE"}\""
+        )
         buildConfigField("String", "BASE_URL", "\"https://www.alphavantage.co/\"")
+    }
+
+    signingConfigs {
+        create("release") {
+            val keystorePath = System.getenv("KEYSTORE_PATH")
+            if (keystorePath != null) {
+                storeFile = file(keystorePath)
+                storePassword = System.getenv("STORE_PASSWORD")
+                keyAlias = System.getenv("KEY_ALIAS")
+                keyPassword = System.getenv("KEY_PASSWORD")
+            }
+        }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
