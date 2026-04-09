@@ -14,6 +14,13 @@ import co.uk.marketanalyser.ui.feature.exchangerates.ExchangeRateScreen
 import co.uk.marketanalyser.ui.feature.exchangerates.ExchangeRateViewModel
 import co.uk.marketanalyser.ui.feature.home.HomeScreen
 
+/**
+ * Central navigation graph for the application.
+ * Defines all routes and their associated composable screens.
+ *
+ * @param modifier The [Modifier] to be applied to the navigation host.
+ * @param navController The [NavHostController] used to manage app navigation.
+ */
 @Composable
 fun AppNavGraph(
     modifier: Modifier = Modifier,

@@ -16,10 +16,19 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
+/**
+ * Hilt module for providing application-wide dependencies.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class AppModule {
 
+    /**
+     * Binds the [ExchangeRateRepositoryImpl] to its interface [ExchangeRateRepository].
+     *
+     * @param impl The implementation of the repository.
+     * @return The repository interface.
+     */
     @Binds
     @Singleton
     abstract fun bindExchangeRateRepository(
@@ -28,6 +37,11 @@ abstract class AppModule {
 
     companion object {
 
+        /**
+         * Provides an [Interceptor] to automatically add the API key to all requests.
+         *
+         * @return The API key interceptor.
+         */
         @Provides
         @Singleton
         fun provideApiKeyInterceptor(): Interceptor = Interceptor { chain ->
@@ -38,6 +52,11 @@ abstract class AppModule {
             chain.proceed(request.newBuilder().url(url).build())
         }
 
+        /**
+         * Provides a [HttpLoggingInterceptor] for logging network requests and responses.
+         *
+         * @return The logging interceptor.
+         */
         @Provides
         @Singleton
         fun provideLoggingInterceptor(): HttpLoggingInterceptor =
@@ -48,6 +67,13 @@ abstract class AppModule {
                     HttpLoggingInterceptor.Level.NONE
             }
 
+        /**
+         * Provides a configured [OkHttpClient].
+         *
+         * @param apiKeyInterceptor The interceptor that adds the API key.
+         * @param loggingInterceptor The interceptor that logs network traffic.
+         * @return A configured OkHttp client.
+         */
         @Provides
         @Singleton
         fun provideOkHttpClient(
@@ -58,6 +84,12 @@ abstract class AppModule {
             .addInterceptor(loggingInterceptor)
             .build()
 
+        /**
+         * Provides a [Retrofit] instance.
+         *
+         * @param okHttpClient The OkHttp client to use for network requests.
+         * @return A configured Retrofit instance.
+         */
         @Provides
         @Singleton
         fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
@@ -66,6 +98,12 @@ abstract class AppModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
+        /**
+         * Provides the [MarketApi] service.
+         *
+         * @param retrofit The Retrofit instance.
+         * @return The market API service.
+         */
         @Provides
         @Singleton
         fun provideMarketApi(retrofit: Retrofit): MarketApi =
