@@ -86,10 +86,7 @@ app/
      ```
 
 3. **JDK:**
-   - The project requires **JDK 17**. Set `org.gradle.java.home` in `gradle.properties` if your default JDK differs:
-     ```properties
-     org.gradle.java.home=/path/to/jdk17
-     ```
+   - The project requires **JDK 17**. Ensure your Android Studio or system JDK is set to 17.
 
 4. **Build & Run:** Open in **Android Studio** and run on an emulator or physical device.
 
