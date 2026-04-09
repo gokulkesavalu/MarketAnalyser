@@ -5,10 +5,20 @@ import co.uk.marketanalyser.domain.repository.ExchangeRateRepository
 import co.uk.marketanalyser.domain.model.ExchangeRate
 import javax.inject.Inject
 
+/**
+ * Implementation of [ExchangeRateRepository] that fetches data from [MarketApi].
+ */
 class ExchangeRateRepositoryImpl @Inject constructor(
     private val api: MarketApi
 ) : ExchangeRateRepository {
 
+    /**
+     * Fetches the exchange rate and maps it to the domain model [ExchangeRate].
+     *
+     * @param fromCurrency The source currency code (e.g., "USD").
+     * @param toCurrency The destination currency code (e.g., "GBP").
+     * @return A [Result] containing the [ExchangeRate] if successful, or a failure otherwise.
+     */
     override suspend fun getExchangeRate(
         fromCurrency: String,
         toCurrency: String

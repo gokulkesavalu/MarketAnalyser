@@ -19,6 +19,12 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import co.uk.marketanalyser.ui.theme.MarketAnalyserTheme
 
+/**
+ * The entry point screen of the application.
+ *
+ * @param onNavigateToExchangeRate Callback to navigate to the Exchange Rate screen.
+ * @param modifier The [Modifier] to be applied to the layout.
+ */
 @Composable
 fun HomeScreen(
     onNavigateToExchangeRate: () -> Unit,

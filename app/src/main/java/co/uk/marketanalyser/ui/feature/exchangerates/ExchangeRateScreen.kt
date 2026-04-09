@@ -31,6 +31,15 @@ import androidx.compose.ui.unit.dp
 import co.uk.marketanalyser.domain.model.ExchangeRate
 import co.uk.marketanalyser.ui.theme.MarketAnalyserTheme
 
+/**
+ * Composable screen for fetching and displaying currency exchange rates.
+ *
+ * @param uiState The current state of the UI.
+ * @param onFromCurrencyChange Callback when the base currency input changes.
+ * @param onToCurrencyChange Callback when the target currency input changes.
+ * @param onFetchRate Callback to trigger the exchange rate fetch.
+ * @param modifier The [Modifier] to be applied to the layout.
+ */
 @Composable
 fun ExchangeRateScreen(
     uiState: ExchangeRateUiState,
@@ -124,6 +133,11 @@ fun ExchangeRateScreen(
     }
 }
 
+/**
+ * Displays the result of an exchange rate query in a [Card].
+ *
+ * @param rate The [ExchangeRate] data to display.
+ */
 @Composable
 private fun ExchangeRateResult(rate: ExchangeRate) {
     Card(
@@ -161,6 +175,12 @@ private fun ExchangeRateResult(rate: ExchangeRate) {
     }
 }
 
+/**
+ * A simple row for displaying a label and a value.
+ *
+ * @param label The descriptive label for the value.
+ * @param value The value to be displayed.
+ */
 @Composable
 private fun RateRow(label: String, value: String) {
     Row(

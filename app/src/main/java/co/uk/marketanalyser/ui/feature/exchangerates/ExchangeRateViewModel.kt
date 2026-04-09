@@ -13,22 +13,45 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel for the Exchange Rate screen.
+ * Handles fetching exchange rates and managing UI state.
+ *
+ * @property repository The repository to fetch exchange rate data.
+ */
 @HiltViewModel
 class ExchangeRateViewModel @Inject constructor(
     private val repository: ExchangeRateRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ExchangeRateUiState())
+
+    /**
+     * The current state of the Exchange Rate UI.
+     */
     val uiState: StateFlow<ExchangeRateUiState> = _uiState.asStateFlow()
 
+    /**
+     * Updates the base currency code in the state.
+     *
+     * @param value The new base currency code (e.g., "USD").
+     */
     fun onFromCurrencyChange(value: String) {
         _uiState.update { it.copy(fromCurrency = value.uppercase(), error = null) }
     }
 
+    /**
+     * Updates the target currency code in the state.
+     *
+     * @param value The new target currency code (e.g., "GBP").
+     */
     fun onToCurrencyChange(value: String) {
         _uiState.update { it.copy(toCurrency = value.uppercase(), error = null) }
     }
 
+    /**
+     * Fetches the exchange rate based on the current UI state.
+     */
     fun fetchExchangeRate() {
         val state = _uiState.value
         if (state.fromCurrency.isBlank() || state.toCurrency.isBlank()) {
@@ -53,6 +76,15 @@ class ExchangeRateViewModel @Inject constructor(
     }
 }
 
+/**
+ * Represents the UI state for the Exchange Rate screen.
+ *
+ * @property fromCurrency The base currency code.
+ * @property toCurrency The target currency code.
+ * @property exchangeRate The fetched exchange rate data, or null if not yet fetched.
+ * @property isLoading Whether a network request is currently in progress.
+ * @property error An error message to display, or null if there's no error.
+ */
 @Immutable
 data class ExchangeRateUiState(
     val fromCurrency: String = "",
