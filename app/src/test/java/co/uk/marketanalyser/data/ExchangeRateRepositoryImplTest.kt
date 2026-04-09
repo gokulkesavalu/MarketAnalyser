@@ -1,6 +1,6 @@
 package co.uk.marketanalyser.data
 
-import co.uk.marketanalyser.data.api.MarketApi
+import co.uk.marketanalyser.data.api.ExchangeRateApi
 import co.uk.marketanalyser.data.model.ExchangeRateDto
 import co.uk.marketanalyser.data.model.ExchangeRateResponse
 import co.uk.marketanalyser.data.repository.ExchangeRateRepositoryImpl
@@ -16,7 +16,7 @@ import java.io.IOException
 
 class ExchangeRateRepositoryImplTest {
 
-    private val api: MarketApi = mockk()
+    private val api: ExchangeRateApi = mockk()
     private val repository: ExchangeRateRepositoryImpl = ExchangeRateRepositoryImpl(api)
 
     private val fakeDto = ExchangeRateDto(

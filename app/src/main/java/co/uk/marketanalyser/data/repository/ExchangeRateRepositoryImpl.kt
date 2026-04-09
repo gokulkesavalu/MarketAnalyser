@@ -1,15 +1,15 @@
 package co.uk.marketanalyser.data.repository
 
-import co.uk.marketanalyser.data.api.MarketApi
+import co.uk.marketanalyser.data.api.ExchangeRateApi
 import co.uk.marketanalyser.domain.repository.ExchangeRateRepository
 import co.uk.marketanalyser.domain.model.ExchangeRate
 import javax.inject.Inject
 
 /**
- * Implementation of [ExchangeRateRepository] that fetches data from [MarketApi].
+ * Implementation of [ExchangeRateRepository] that fetches data from [ExchangeRateApi].
  */
 class ExchangeRateRepositoryImpl @Inject constructor(
-    private val api: MarketApi
+    private val api: ExchangeRateApi
 ) : ExchangeRateRepository {
 
     /**

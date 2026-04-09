@@ -5,9 +5,9 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 /**
- * Retrofit API interface for Alpha Vantage market data services.
+ * Retrofit API interface for Alpha Vantage currency exchange rate services.
  */
-interface MarketApi {
+interface ExchangeRateApi {
 
     /**
      * Fetches the real-time currency exchange rate.

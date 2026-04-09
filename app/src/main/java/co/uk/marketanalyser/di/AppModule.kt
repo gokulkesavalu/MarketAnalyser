@@ -2,7 +2,7 @@ package co.uk.marketanalyser.di
 
 import co.uk.marketanalyser.BuildConfig
 import co.uk.marketanalyser.data.repository.ExchangeRateRepositoryImpl
-import co.uk.marketanalyser.data.api.MarketApi
+import co.uk.marketanalyser.data.api.ExchangeRateApi
 import co.uk.marketanalyser.domain.repository.ExchangeRateRepository
 import dagger.Binds
 import dagger.Module
@@ -99,14 +99,13 @@ abstract class AppModule {
             .build()
 
         /**
-         * Provides the [MarketApi] service.
+         * Provides the [ExchangeRateApi] service.
          *
          * @param retrofit The Retrofit instance.
-         * @return The market API service.
          */
         @Provides
         @Singleton
-        fun provideMarketApi(retrofit: Retrofit): MarketApi =
-            retrofit.create(MarketApi::class.java)
+        fun provideExchangeRateApi(retrofit: Retrofit): ExchangeRateApi =
+            retrofit.create(ExchangeRateApi::class.java)
     }
 }
