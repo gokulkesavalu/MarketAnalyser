@@ -2,6 +2,7 @@ package co.uk.marketanalyser.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -35,11 +36,15 @@ fun AppNavGraph(
             val viewModel: ExchangeRateViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+            val onFromCurrencyChange: (String) -> Unit = remember(viewModel) { { viewModel.onFromCurrencyChange(it) } }
+            val onToCurrencyChange: (String) -> Unit   = remember(viewModel) { { viewModel.onToCurrencyChange(it) } }
+            val onFetchRate: () -> Unit                = remember(viewModel) { { viewModel.fetchExchangeRate() } }
+
             ExchangeRateScreen(
                 uiState = uiState,
-                onFromCurrencyChange = viewModel::onFromCurrencyChange,
-                onToCurrencyChange = viewModel::onToCurrencyChange,
-                onFetchRate = viewModel::fetchExchangeRate
+                onFromCurrencyChange = onFromCurrencyChange,
+                onToCurrencyChange = onToCurrencyChange,
+                onFetchRate = onFetchRate
             )
         }
     }

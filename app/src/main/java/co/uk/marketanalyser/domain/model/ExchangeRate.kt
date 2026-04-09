@@ -1,5 +1,8 @@
 package co.uk.marketanalyser.domain.model
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class ExchangeRate(
     val fromCurrencyCode: String,
     val fromCurrencyName: String,

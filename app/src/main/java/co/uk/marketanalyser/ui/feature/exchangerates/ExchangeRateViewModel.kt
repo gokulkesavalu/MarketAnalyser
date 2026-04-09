@@ -1,5 +1,6 @@
 package co.uk.marketanalyser.ui.feature.exchangerates
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.uk.marketanalyser.domain.repository.ExchangeRateRepository
@@ -52,6 +53,7 @@ class ExchangeRateViewModel @Inject constructor(
     }
 }
 
+@Immutable
 data class ExchangeRateUiState(
     val fromCurrency: String = "",
     val toCurrency: String = "",
