@@ -1,4 +1,4 @@
-package co.uk.marketanalyser.ui.feature.home
+package co.uk.marketanalyser.feature.home.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
