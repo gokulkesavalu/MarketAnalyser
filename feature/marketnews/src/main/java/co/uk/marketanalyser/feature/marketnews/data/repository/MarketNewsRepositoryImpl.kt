@@ -53,7 +53,7 @@ class MarketNewsRepositoryImpl @Inject constructor(
                 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
             )[month - 1]
             "$monthName $day, $year $hour:$minute"
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             raw
         }
     }
