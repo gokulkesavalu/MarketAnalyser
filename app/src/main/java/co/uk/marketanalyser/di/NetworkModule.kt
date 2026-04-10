@@ -1,7 +1,8 @@
 package co.uk.marketanalyser.di
 
 import co.uk.marketanalyser.BuildConfig
-import co.uk.marketanalyser.core.network.MarketApi
+import co.uk.marketanalyser.core.network.api.ExchangeRateApi
+import co.uk.marketanalyser.core.network.api.MarketNewsApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 /**
- * Hilt module that provides the network layer — Retrofit, OkHttp, and [MarketApi].
+ * Hilt module that provides the network layer — Retrofit, OkHttp, and [MarketNewsApi, ExchangeRateApi].
  * Lives in :app so it has access to [BuildConfig] for the API key and base URL.
  */
 @Module
@@ -71,11 +72,19 @@ object NetworkModule {
         .build()
 
     /**
-     * Provides the [MarketApi] service.
+     * Provides a [MarketNewsApi] instance pointed at the Alpha Vantage base URL.
      */
     @Provides
     @Singleton
-    fun provideMarketApi(retrofit: Retrofit): MarketApi =
-        retrofit.create(MarketApi::class.java)
+    fun provideMarketNewsApi(retrofit: Retrofit): MarketNewsApi =
+        retrofit.create(MarketNewsApi::class.java)
+
+    /**
+     * Provides a [ExchangeRateApi] instance pointed at the Alpha Vantage base URL.
+     */
+    @Provides
+    @Singleton
+    fun provideExchangeRateApi(retrofit: Retrofit): ExchangeRateApi =
+        retrofit.create(ExchangeRateApi::class.java)
 }
 
