@@ -17,17 +17,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import co.uk.marketanalyser.ui.theme.MarketAnalyserTheme
+import co.uk.marketanalyser.core.ui.theme.MarketAnalyserTheme
 
 /**
  * The entry point screen of the application.
  *
  * @param onNavigateToExchangeRate Callback to navigate to the Exchange Rate screen.
+ * @param onNavigateToMarketNews Callback to navigate to the Market News screen.
  * @param modifier The [Modifier] to be applied to the layout.
  */
 @Composable
 fun HomeScreen(
     onNavigateToExchangeRate: () -> Unit,
+    onNavigateToMarketNews: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -47,7 +49,7 @@ fun HomeScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Track real-time currency exchange rates",
+            text = "Real-time market data at your fingertips",
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
@@ -61,6 +63,15 @@ fun HomeScreen(
         ) {
             Text(text = "Check Exchange Rate")
         }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Button(
+            onClick = onNavigateToMarketNews,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Market News & Sentiment")
+        }
     }
 }
 
@@ -68,7 +79,9 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenPreview() {
     MarketAnalyserTheme {
-        HomeScreen(onNavigateToExchangeRate = {})
+        HomeScreen(
+            onNavigateToExchangeRate = {},
+            onNavigateToMarketNews = {}
+        )
     }
 }
-

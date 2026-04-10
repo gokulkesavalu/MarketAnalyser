@@ -24,4 +24,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "MarketAnalyser"
 include(":app")
- 
+include(":core:network")
+include(":core:ui")
+include(":feature:exchangerate")
+include(":feature:marketnews")
