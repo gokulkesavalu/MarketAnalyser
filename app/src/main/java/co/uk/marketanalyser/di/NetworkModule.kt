@@ -15,7 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 /**
- * Hilt module that provides the network layer — Retrofit, OkHttp, and [MarketNewsApi, ExchangeRateApi].
+ * Hilt module that provides the network layer — Retrofit, OkHttp, [MarketNewsApi], and [ExchangeRateApi].
  * Lives in :app so it has access to [BuildConfig] for the API key and base URL.
  */
 @Module

@@ -11,6 +11,6 @@ interface ExchangeRateDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(exchangeRate: ExchangeRateEntity)
 
-    @Query("SELECT * FROM exchange_rates WHERE id = :id ")
+    @Query("SELECT * FROM exchange_rates WHERE id = :id")
     suspend fun getExchangeRate(id: String): ExchangeRateEntity?
 }
