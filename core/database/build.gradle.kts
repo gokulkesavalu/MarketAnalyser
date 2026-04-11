@@ -1,13 +1,12 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.ksp)
 }
 
 android {
-    namespace = "co.uk.marketanalyser.feature.exchangerate"
+    namespace = "co.uk.marketanalyser.core.database"
     compileSdk = 36
 
     defaultConfig {
@@ -21,21 +20,14 @@ android {
     kotlinOptions {
         jvmTarget = "21"
     }
-    buildFeatures {
-        compose = true
-    }
 }
 
 dependencies {
-    implementation(project(":core:network"))
-    implementation(project(":core:ui"))
-    implementation(project(":core:database"))
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
-
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
 
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
@@ -45,4 +37,3 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
 }
-
