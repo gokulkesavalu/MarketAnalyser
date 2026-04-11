@@ -8,7 +8,7 @@ import co.uk.marketanalyser.core.database.entity.ExchangeRateEntity
 
 @Dao
 interface ExchangeRateDao {
-    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(exchangeRate: ExchangeRateEntity)
 
     @Query("SELECT * FROM exchange_rates WHERE id = :id ")

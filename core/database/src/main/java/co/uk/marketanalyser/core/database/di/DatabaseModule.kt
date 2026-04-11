@@ -3,6 +3,7 @@ package co.uk.marketanalyser.core.database.di
 import android.content.Context
 import androidx.room.Room
 import co.uk.marketanalyser.core.database.MarketAnalyserDatabase
+import co.uk.marketanalyser.core.database.dao.ExchangeRateDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
