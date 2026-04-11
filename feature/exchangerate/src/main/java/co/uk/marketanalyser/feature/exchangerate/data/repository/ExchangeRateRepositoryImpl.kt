@@ -6,6 +6,7 @@ import co.uk.marketanalyser.feature.exchangerate.data.mapper.toDomainModel
 import co.uk.marketanalyser.feature.exchangerate.data.mapper.toEntity
 import co.uk.marketanalyser.feature.exchangerate.domain.model.ExchangeRate
 import co.uk.marketanalyser.feature.exchangerate.domain.repository.ExchangeRateRepository
+import kotlinx.coroutines.CancellationException
 import javax.inject.Inject
 
 /**
@@ -38,6 +39,9 @@ class ExchangeRateRepositoryImpl @Inject constructor(
      * 4. On network success, update the local cache and return the result.
      * 5. On network failure, return the stale cache as a fallback if it exists.
      *
+     * Note: [CancellationException] is rethrown to ensure proper coroutine cancellation
+     * and avoid returning stale results when a job is intentionally stopped.
+     *
      * @param fromCurrency The base currency code (e.g., "USD").
      * @param toCurrency The target currency code (e.g., "GBP").
      * @return A [Result] containing the [ExchangeRate] domain model or an error.
@@ -61,6 +65,7 @@ class ExchangeRateRepositoryImpl @Inject constructor(
             exchangeRateDao.insert(dto.toEntity(fromCurrency, toCurrency))
             Result.success(dto.toDomainModel())
         } catch (e: Exception) {
+            if (e is CancellationException) throw e // Let the coroutine system handle cancellation
             cachedExchangeRate?.let {
                 Result.success(it.toDomainModel())
             } ?: Result.failure(e)

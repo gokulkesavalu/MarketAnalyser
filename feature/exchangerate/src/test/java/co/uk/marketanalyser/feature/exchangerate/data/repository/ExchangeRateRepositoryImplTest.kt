@@ -9,6 +9,7 @@ import co.uk.marketanalyser.feature.exchangerate.domain.model.ExchangeRate
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -203,6 +204,70 @@ class ExchangeRateRepositoryImplTest {
         assertEquals("Japanese Yen", rate.toCurrencyName)
         assertEquals("2026-04-09 17:49:38", rate.lastRefreshed)
         assertEquals("UTC", rate.timeZone)
+    }
+
+    @Test(expected = CancellationException::class)
+    fun `getExchangeRate rethrows CancellationException`() = runTest {
+        // GIVEN: Cache is stale
+        val staleCache = fakeEntity.copy(
+            cachedAt = System.currentTimeMillis() - (6 * 60 * 1000L)
+        )
+        coEvery { exchangeRateDao.getExchangeRate(any()) } returns staleCache
+
+        coEvery {
+            exchangeRateApi.getCurrencyExchangeRate(
+                fromCurrency = any(),
+                toCurrency = any()
+            )
+        } throws CancellationException("Job was cancelled")
+
+        repository.getExchangeRate("USD", "JPY")
+
+        // THEN: CancellationException is rethrown (verified by @Test(expected))
+    }
+
+    @Test
+    fun `getExchangeRate returns failure when cache is empty and network fails`() = runTest {
+        // GIVEN: No cached data exists
+        coEvery { exchangeRateDao.getExchangeRate(any()) } returns null
+        val networkError = IOException("No internet")
+        coEvery {
+            exchangeRateApi.getCurrencyExchangeRate(
+                fromCurrency = any(),
+                toCurrency = any()
+            )
+        } throws networkError
+
+        val result = repository.getExchangeRate("USD", "JPY")
+
+        assertTrue(result.isFailure)
+        assertEquals(networkError, result.exceptionOrNull())
+    }
+
+    @Test
+    fun `getExchangeRate inserts new data into dao on network success`() = runTest {
+        // GIVEN: Cache is stale
+        val staleCache = fakeEntity.copy(
+            cachedAt = System.currentTimeMillis() - (6 * 60 * 1000L)
+        )
+        coEvery { exchangeRateDao.getExchangeRate(any()) } returns staleCache
+        coEvery {
+            exchangeRateApi.getCurrencyExchangeRate(
+                fromCurrency = any(),
+                toCurrency = any()
+            )
+        } returns fakeResponse
+        coEvery { exchangeRateDao.insert(any()) } returns Unit
+
+        repository.getExchangeRate("USD", "JPY")
+
+        coVerify(exactly = 1) {
+            exchangeRateDao.insert(match {
+                it.fromCurrencyCode == "USD" &&
+                        it.toCurrencyCode == "JPY" &&
+                        it.exchangeRate == 158.74988722
+            })
+        }
     }
 }
 
