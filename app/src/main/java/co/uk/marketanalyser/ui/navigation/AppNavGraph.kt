@@ -10,9 +10,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import co.uk.marketanalyser.ui.feature.exchangerates.ExchangeRateScreen
-import co.uk.marketanalyser.ui.feature.exchangerates.ExchangeRateViewModel
-import co.uk.marketanalyser.ui.feature.home.HomeScreen
+import co.uk.marketanalyser.feature.exchangerate.ui.ExchangeRateScreen
+import co.uk.marketanalyser.feature.exchangerate.ui.ExchangeRateViewModel
+import co.uk.marketanalyser.feature.home.ui.HomeScreen
+import co.uk.marketanalyser.feature.marketnews.ui.MarketNewsScreen
+import co.uk.marketanalyser.feature.marketnews.ui.MarketNewsViewModel
 
 /**
  * Central navigation graph for the application.
@@ -33,9 +35,8 @@ fun AppNavGraph(
     ) {
         composable(route = Screen.Home.route) {
             HomeScreen(
-                onNavigateToExchangeRate = {
-                    navController.navigate(Screen.ExchangeRate.route)
-                }
+                onNavigateToExchangeRate = { navController.navigate(Screen.ExchangeRate.route) },
+                onNavigateToMarketNews = { navController.navigate(Screen.MarketNews.route) }
             )
         }
 
@@ -43,15 +44,32 @@ fun AppNavGraph(
             val viewModel: ExchangeRateViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-            val onFromCurrencyChange: (String) -> Unit = remember(viewModel) { { viewModel.onFromCurrencyChange(it) } }
-            val onToCurrencyChange: (String) -> Unit   = remember(viewModel) { { viewModel.onToCurrencyChange(it) } }
-            val onFetchRate: () -> Unit                = remember(viewModel) { { viewModel.fetchExchangeRate() } }
+            val onFromCurrencyChange: (String) -> Unit =
+                remember(viewModel) { { viewModel.onFromCurrencyChange(it) } }
+            val onToCurrencyChange: (String) -> Unit =
+                remember(viewModel) { { viewModel.onToCurrencyChange(it) } }
+            val onFetchRate: () -> Unit = remember(viewModel) { { viewModel.fetchExchangeRate() } }
 
             ExchangeRateScreen(
                 uiState = uiState,
                 onFromCurrencyChange = onFromCurrencyChange,
                 onToCurrencyChange = onToCurrencyChange,
                 onFetchRate = onFetchRate
+            )
+        }
+
+        composable(route = Screen.MarketNews.route) {
+            val viewModel: MarketNewsViewModel = hiltViewModel()
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+            val onTickerChange: (String) -> Unit =
+                remember(viewModel) { { viewModel.onTickerChange(it) } }
+            val onFetchNews: () -> Unit = remember(viewModel) { { viewModel.fetchNews() } }
+
+            MarketNewsScreen(
+                uiState = uiState,
+                onTickerChange = onTickerChange,
+                onFetchNews = onFetchNews
             )
         }
     }

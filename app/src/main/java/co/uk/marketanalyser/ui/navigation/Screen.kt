@@ -16,4 +16,9 @@ sealed class Screen {
      * The screen for viewing and calculating currency exchange rates.
      */
     data object ExchangeRate : Screen()
+
+    /**
+     * The screen for browsing market news and sentiment by ticker.
+     */
+    data object MarketNews : Screen()
 }

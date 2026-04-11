@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import co.uk.marketanalyser.core.ui.theme.MarketAnalyserTheme
 import co.uk.marketanalyser.ui.navigation.AppNavGraph
-import co.uk.marketanalyser.ui.theme.MarketAnalyserTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
