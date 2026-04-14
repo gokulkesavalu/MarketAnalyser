@@ -21,7 +21,33 @@ data class NewsArticle(
     val timePublished: String,
     val overallSentimentLabel: String,
     val overallSentimentScore: Double,
-    val topics: List<String>,
-    val tickers: List<String>
+    val topics: List<NewsTopic>,
+    val tickers: List<NewsTickerSentiment>
+)
+
+/**
+ * Represents a topic associated with a news article.
+ *
+ * @property topic The name of the topic.
+ * @property relevanceScore A score indicating the relevance of the topic to the article.
+ */
+data class NewsTopic(
+    val topic: String,
+    val relevanceScore: String
+)
+
+/**
+ * Represents sentiment data for a specific stock ticker mentioned in a news article.
+ *
+ * @property ticker The stock ticker symbol (e.g., "AAPL").
+ * @property relevanceScore How relevant the article is to this ticker.
+ * @property tickerSentimentScore The sentiment score for this specific ticker.
+ * @property tickerSentimentLabel The sentiment label for this specific ticker (e.g., "Bullish").
+ */
+data class NewsTickerSentiment(
+    val ticker: String,
+    val relevanceScore: String,
+    val tickerSentimentScore: String,
+    val tickerSentimentLabel: String
 )
 

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import co.uk.marketanalyser.core.database.MarketAnalyserDatabase
 import co.uk.marketanalyser.core.database.dao.ExchangeRateDao
+import co.uk.marketanalyser.core.database.dao.MarketNewsDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,4 +43,14 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideExchangeRateDao(db: MarketAnalyserDatabase) = db.exchangeRateDao()
+
+    /**
+     * Provides the DAO for market news operations.
+     *
+     * @param db The [MarketAnalyserDatabase] instance.
+     * @return The [MarketNewsDao] used for database operations.
+     */
+    @Provides
+    @Singleton
+    fun provideMarketNewsDao(db: MarketAnalyserDatabase) = db.marketNewsDao()
 }
