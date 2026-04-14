@@ -7,6 +7,7 @@ import co.uk.marketanalyser.feature.marketnews.domain.model.NewsArticle
 import co.uk.marketanalyser.feature.marketnews.domain.model.NewsTickerSentiment
 import co.uk.marketanalyser.feature.marketnews.domain.model.NewsTopic
 import co.uk.marketanalyser.feature.marketnews.domain.repository.MarketNewsRepository
+import kotlinx.coroutines.CancellationException
 import javax.inject.Inject
 
 /**
@@ -61,7 +62,10 @@ class MarketNewsRepositoryImpl @Inject constructor(
             }
             Result.success(articles)
         } catch (e: Exception) {
-            Result.failure(e)
+            if (e is CancellationException) throw e // Rethrow to ensure proper coroutine cancellation
+            cachedMarketNews.let {
+                Result.success(cachedMarketNews.map { it.toDomainModel() })
+            }
         }
     }
 

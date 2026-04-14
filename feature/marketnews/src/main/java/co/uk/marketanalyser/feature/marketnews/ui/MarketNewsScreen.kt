@@ -37,6 +37,8 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import co.uk.marketanalyser.core.ui.theme.MarketAnalyserTheme
 import co.uk.marketanalyser.feature.marketnews.domain.model.NewsArticle
+import co.uk.marketanalyser.feature.marketnews.domain.model.NewsTickerSentiment
+import co.uk.marketanalyser.feature.marketnews.domain.model.NewsTopic
 
 @Composable
 fun MarketNewsScreen(
@@ -100,6 +102,7 @@ fun MarketNewsScreen(
                     CircularProgressIndicator()
                 }
             }
+
             uiState.error != null -> {
                 Text(
                     text = uiState.error,
@@ -107,6 +110,7 @@ fun MarketNewsScreen(
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
+
             uiState.articles.isNotEmpty() -> {
                 LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     items(uiState.articles, key = { it.url }) { article ->
@@ -165,7 +169,7 @@ private fun NewsArticleCard(article: NewsArticle) {
                     article.tickers.forEach { ticker ->
                         SuggestionChip(
                             onClick = {},
-                            label = { Text(ticker, style = MaterialTheme.typography.labelSmall) }
+                            label = { Text(ticker.ticker, style = MaterialTheme.typography.labelSmall) }
                         )
                     }
                 }
@@ -193,6 +197,25 @@ private fun SentimentChip(label: String) {
 
 // ── Previews ──────────────────────────────────────────────────────────────────
 
+private val newsTopics = listOf(
+    NewsTopic(topic = "earnings", relevanceScore = "0.9f"),
+    NewsTopic(topic = "technology", relevanceScore = "0.8f"),
+)
+
+private val tickersList = listOf(
+    NewsTickerSentiment(
+        ticker = "AAPL",
+        relevanceScore = "0.95f",
+        tickerSentimentScore = "0.8f",
+        tickerSentimentLabel = "Bullish"
+    ),
+    NewsTickerSentiment(
+        ticker = "MSFT",
+        relevanceScore = "0.85f",
+        tickerSentimentScore = "0.6f",
+        tickerSentimentLabel = "Somewhat-Bullish"
+    )
+)
 private val sampleArticles = listOf(
     NewsArticle(
         title = "Apple leads global smartphone shipments in Q1 despite overall shipments declining",
@@ -202,8 +225,8 @@ private val sampleArticles = listOf(
         timePublished = "Apr 10, 2026 13:01",
         overallSentimentLabel = "Bullish",
         overallSentimentScore = 0.441002,
-        topics = listOf("earnings", "technology"),
-        tickers = listOf("AAPL")
+        topics = newsTopics,
+        tickers = tickersList
     ),
     NewsArticle(
         title = "Apple will close its first unionized retail location in the US",
@@ -213,8 +236,8 @@ private val sampleArticles = listOf(
         timePublished = "Apr 09, 2026 23:19",
         overallSentimentLabel = "Somewhat-Bearish",
         overallSentimentScore = -0.180335,
-        topics = listOf("retail_wholesale"),
-        tickers = listOf("AAPL")
+        topics = newsTopics,
+        tickers = tickersList
     )
 )
 
@@ -247,7 +270,10 @@ private fun PreviewLoading() {
 private fun PreviewError() {
     MarketAnalyserTheme {
         MarketNewsScreen(
-            uiState = MarketNewsUiState(ticker = "AAPL", error = "Network error. Please try again."),
+            uiState = MarketNewsUiState(
+                ticker = "AAPL",
+                error = "Network error. Please try again."
+            ),
             onTickerChange = {},
             onFetchNews = {}
         )

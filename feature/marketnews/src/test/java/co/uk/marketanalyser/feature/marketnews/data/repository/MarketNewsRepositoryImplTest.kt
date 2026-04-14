@@ -1,5 +1,6 @@
 package co.uk.marketanalyser.feature.marketnews.data.repository
 
+import co.uk.marketanalyser.core.database.dao.MarketNewsDao
 import co.uk.marketanalyser.core.network.api.MarketNewsApi
 import co.uk.marketanalyser.core.network.dto.MarketNewsItemDto
 import co.uk.marketanalyser.core.network.dto.MarketNewsResponse
@@ -17,7 +18,9 @@ import java.io.IOException
 class MarketNewsRepositoryImplTest {
 
     private val marketNewsApi: MarketNewsApi = mockk()
-    private val repository = MarketNewsRepositoryImpl(marketNewsApi)
+    private val marketNewsDao: MarketNewsDao =
+        mockk(relaxed = true) // Relaxed to ignore database interactions for these tests
+    private val repository = MarketNewsRepositoryImpl(marketNewsDao, marketNewsApi)
 
     private val fakeItem = MarketNewsItemDto(
         title = "Apple leads global smartphone shipments in Q1",
