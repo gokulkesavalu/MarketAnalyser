@@ -10,7 +10,14 @@ import kotlinx.coroutines.CancellationException
 import javax.inject.Inject
 
 /**
- * Implementation of [MarketNewsRepository] that fetches from the Alpha Vantage NEWS_SENTIMENT API.
+ * Implementation of [MarketNewsRepository] that provides market news and sentiment data
+ * using an offline-first strategy with a 15-minute cache TTL (Time-To-Live).
+ *
+ * It prioritizes returning fresh data from the local cache. If the cache is stale
+ * or missing, it fetches fresh data from the Alpha Vantage API and updates the local store.
+ *
+ * @property marketNewsDao The local data source for cached market news.
+ * @property marketNewsApi The remote data source for fetching real-time market news.
  */
 class MarketNewsRepositoryImpl @Inject constructor(
     private val marketNewsDao: MarketNewsDao,
@@ -41,7 +48,7 @@ class MarketNewsRepositoryImpl @Inject constructor(
         val cachedMarketNews = marketNewsDao.getMarketNews()
         val isCacheValid =
             cachedMarketNews.isNotEmpty() && System.currentTimeMillis() - cachedMarketNews.first().cachedAt < CACHE_TIMEOUT
-        
+
         if (isCacheValid) {
             return Result.success(cachedMarketNews.map { it.toDomainModel() })
         }
@@ -49,18 +56,18 @@ class MarketNewsRepositoryImpl @Inject constructor(
         return try {
             val response = marketNewsApi.getMarketNews(tickers = tickers)
             val dtos = response.feed
-            
+
             // Format time and map to domain model for immediate return
             // Also map to entities for caching
-            val entities = dtos.map { it.toEntity().copy(timePublished = formatTime(it.timePublished)) }
-            
+            val entities =
+                dtos.map { it.toEntity().copy(timePublished = formatTime(it.timePublished)) }
+
             // Update cache
             entities.forEach { marketNewsDao.insert(it) }
-            
             Result.success(entities.map { it.toDomainModel() })
         } catch (e: Exception) {
             if (e is CancellationException) throw e // Rethrow to ensure proper coroutine cancellation
-            
+
             if (cachedMarketNews.isNotEmpty()) {
                 Result.success(cachedMarketNews.map { it.toDomainModel() })
             } else {
